@@ -1,6 +1,38 @@
 server.port: 7001
 server.error.include-message: always
 
+spring.cloud.function.definition: messageProcessor
+
+spring.cloud.stream:
+  defaultBinder: kafka
+  default.contentType: application/json
+  bindings:
+    messageProcessor-in-0:
+      destination: products
+      group: productsGroup
+      consumer:
+        max-attempts: 3
+        back-off-initial-interval: 1000
+        back-off-max-interval: 10000
+        back-off-multiplier: 2.0
+
+spring.cloud.stream.rabbit.bindings.messageProcessor-in-0.consumer:
+  autoBindDlq: true
+  republishToDlq: true
+
+spring.cloud.stream.kafka.bindings.messageProcessor-in-0.consumer:
+  enableDlq: true
+
+spring.rabbitmq:
+  host: localhost
+  port: 5672
+  username: guest
+  password: guest
+
+spring.cloud.stream.kafka.binder:
+  brokers: localhost
+  defaultBrokerPort: 9092
+
 spring.data.mongodb:
   host: localhost
   port: 27017
@@ -16,5 +48,6 @@ logging:
 
 spring.config.activate.on-profile: docker
 server.port: 8080
-
+spring.cloud.stream.kafka.binder.brokers: broker
 spring.data.mongodb.host: mongodb
+#spring.rabbitmq.host: rabbitmq
