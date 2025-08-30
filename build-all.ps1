@@ -38,6 +38,11 @@ try {
     ./mvnw clean install
     if ($LASTEXITCODE -ne 0) { throw "Failed to build composite service" }
 
+    Write-Host "`nBuilding eureak service..." -ForegroundColor Cyan
+    Set-Location "$rootDir\config\eureka"
+    ./mvnw clean install
+    if ($LASTEXITCODE -ne 0) { throw "Failed to build eureka service" }
+
     Write-Host "`nAll projects built successfully!" -ForegroundColor Green
 }
 catch {
